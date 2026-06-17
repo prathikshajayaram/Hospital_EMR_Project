@@ -16,6 +16,10 @@ function LabReportUpload() {
     formData.append("report_file", file);
 
     try {
+      if (!visitId || !reportName || !file) {
+  alert("Please fill all Lab Report fields");
+  return;
+}
 
       const response = await axios.post(
         "http://localhost:5000/api/labreports",
