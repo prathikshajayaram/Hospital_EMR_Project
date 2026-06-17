@@ -51,3 +51,34 @@ VALUES
 '2026-06-25'
 );
 SELECT * FROM visits;
+USE hospital_emr;
+
+SELECT * FROM visits;
+USE hospital_emr;
+DROP TABLE IF EXISTS diagnoses;
+ 
+CREATE TABLE diagnoses (
+    diagnosis_id INT AUTO_INCREMENT PRIMARY KEY,
+    visit_id INT NOT NULL,
+    diagnosis_name VARCHAR(255),
+    remarks TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT fk_visit_diagnosis
+    FOREIGN KEY (visit_id)
+    REFERENCES visits(visit_id)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE
+);
+USE hospital_emr;
+SELECT * FROM diagnoses;
+
+USE hospital_emr;
+SELECT * FROM prescriptions;
+
+SELECT * FROM lab_reports;
+USE hospital_emr;
+
+SELECT * FROM visits;
+SELECT * FROM diagnoses;
+SELECT * FROM prescriptions;
+SELECT * FROM lab_reports;
