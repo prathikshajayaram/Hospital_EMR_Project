@@ -16,7 +16,7 @@ function DiagnosisForm() {
   !remarks
 ) {
   alert("Please fill all fields");
-  return;
+  return; 
 }      
       const response = await axios.post(
         "http://localhost:5000/api/diagnoses",
@@ -31,9 +31,15 @@ function DiagnosisForm() {
 
     } catch(error) {
 
-      alert("Error Saving Diagnosis");
+  console.log(error);
 
-    }
+  if (error.response) {
+    alert(JSON.stringify(error.response.data));
+  } else {
+    alert(error.message);
+  }
+
+}
 
   };
 

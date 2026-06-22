@@ -1,103 +1,102 @@
 import { useState } from "react";
-import axios from "axios";
+import api from "../api/api";
 
-function VisitForm() {
+function VisitPage() {
 
-  const [patientId, setPatientId] = useState("");
-  const [doctorId, setDoctorId] = useState("");
-  const [symptoms, setSymptoms] = useState("");
-  const [treatmentNotes, setTreatmentNotes] = useState("");
-  const [followUpDate, setFollowUpDate] = useState("");
+    const [formData, setFormData] = useState({
+        patient_id: "",
+        doctor_id: "",
+        symptoms: "",
+        treatment_notes: "",
+        follow_up_date: ""
+    });
 
-  const saveVisit = async () => {
+    const handleChange = (e) => {
+        setFormData({
+            ...formData,
+            [e.target.name]: e.target.value
+        });
+    };
 
-    try {
-        if (
-  !patientId ||
-  !doctorId ||
-  !symptoms ||
-  !treatmentNotes
-) {
-  alert("Please fill all fields");
-  return;
-}
-      const response = await axios.post(
-        "http://localhost:5000/api/visits",
-        {
-          patient_id: patientId,
-          doctor_id: doctorId,
-          symptoms: symptoms,
-          treatment_notes: treatmentNotes,
-          follow_up_date: followUpDate
+    const handleSubmit = async (e) => {
+
+        e.preventDefault();
+
+        try {
+
+            await api.post(
+                "/visits",
+                formData
+            );
+
+            alert("Visit Added Successfully");
+
+        } catch (error) {
+
+            console.log(error);
+
         }
-      );
 
-      alert(response.data.message);
+    };
 
-    } catch (error) {
+    return (
 
-      console.log(error);
+        <div style={{ padding: "20px" }}>
 
-      alert("Error Saving Visit");
+            <h2>Add Visit</h2>
 
-    }
+            <form onSubmit={handleSubmit}>
 
-  };
+                <input
+                    name="patient_id"
+                    placeholder="Patient ID"
+                    onChange={handleChange}
+                />
 
-  return (
-    <div>
+                <br /><br />
 
-      <h2>Visit Form</h2>
+                <input
+                    name="doctor_id"
+                    placeholder="Doctor ID"
+                    onChange={handleChange}
+                />
 
-      <input
-        type="number"
-        placeholder="Patient ID"
-        value={patientId}
-        onChange={(e)=>setPatientId(e.target.value)}
-      />
+                <br /><br />
 
-      <br /><br />
+                <textarea
+                    name="symptoms"
+                    placeholder="Symptoms"
+                    onChange={handleChange}
+                />
 
-      <input
-        type="number"
-        placeholder="Doctor ID"
-        value={doctorId}
-        onChange={(e)=>setDoctorId(e.target.value)}
-      />
+                <br /><br />
 
-      <br /><br />
+                <textarea
+                    name="treatment_notes"
+                    placeholder="Treatment Notes"
+                    onChange={handleChange}
+                />
 
-      <textarea
-        placeholder="Symptoms"
-        value={symptoms}
-        onChange={(e)=>setSymptoms(e.target.value)}
-      />
+                <br /><br />
 
-      <br /><br />
+                <input
+                    type="date"
+                    name="follow_up_date"
+                    onChange={handleChange}
+                />
 
-      <textarea
-        placeholder="Treatment Notes"
-        value={treatmentNotes}
-        onChange={(e)=>setTreatmentNotes(e.target.value)}
-      />
+                <br /><br />
 
-      <br /><br />
+                <button type="submit">
+                    Save Visit
+                </button>
 
-      <input
-        type="date"
-        value={followUpDate}
-        onChange={(e)=>setFollowUpDate(e.target.value)}
-      />
+            </form>
 
-      <br /><br />
+        </div>
 
-      <button onClick={saveVisit}>
-        Save Visit
-      </button>
+    );
 
-    </div>
-  );
-  
 }
 
-export default VisitForm;
+export default VisitPage;

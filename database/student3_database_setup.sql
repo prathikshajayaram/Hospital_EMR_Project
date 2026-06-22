@@ -82,3 +82,10 @@ SELECT * FROM visits;
 SELECT * FROM diagnoses;
 SELECT * FROM prescriptions;
 SELECT * FROM lab_reports;
+
+SELECT * FROM visits;
+use hospital_emr;
+SELECT * FROM diagnoses WHERE visit_id = 1;
+SELECT * FROM prescriptions WHERE visit_id = 1;
+SELECT * FROM lab_reports WHERE visit_id = 1;
+SELECT * FROM visits;

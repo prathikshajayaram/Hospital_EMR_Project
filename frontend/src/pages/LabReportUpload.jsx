@@ -5,33 +5,31 @@ function LabReportUpload() {
 
   const [visitId, setVisitId] = useState("");
   const [reportName, setReportName] = useState("");
-  const [file, setFile] = useState(null);
+  const [filePath, setFilePath] = useState("");
 
   const uploadReport = async () => {
 
-    const formData = new FormData();
-
-    formData.append("visit_id", visitId);
-    formData.append("report_name", reportName);
-    formData.append("report_file", file);
-
     try {
-      if (!visitId || !reportName || !file) {
-  alert("Please fill all Lab Report fields");
-  return;
-}
+
+      if (!visitId || !reportName || !filePath) {
+        alert("Please fill all fields");
+        return;
+      }
 
       const response = await axios.post(
         "http://localhost:5000/api/labreports",
-        formData
+        {
+          visit_id: visitId,
+          report_name: reportName,
+          file_path: filePath
+        }
       );
 
       alert(response.data.message);
 
-    } catch(error) {
+    } catch (error) {
 
       console.log(error);
-
       alert("Upload Failed");
 
     }
@@ -42,12 +40,12 @@ function LabReportUpload() {
 
     <div>
 
-      <h2>Lab Report Upload</h2>
+      <h2>Lab Report Form</h2>
 
       <input
         placeholder="Visit ID"
         value={visitId}
-        onChange={(e)=>setVisitId(e.target.value)}
+        onChange={(e) => setVisitId(e.target.value)}
       />
 
       <br /><br />
@@ -55,23 +53,25 @@ function LabReportUpload() {
       <input
         placeholder="Report Name"
         value={reportName}
-        onChange={(e)=>setReportName(e.target.value)}
+        onChange={(e) => setReportName(e.target.value)}
       />
 
       <br /><br />
 
       <input
-        type="file"
-        onChange={(e)=>setFile(e.target.files[0])}
+        placeholder="File Path"
+        value={filePath}
+        onChange={(e) => setFilePath(e.target.value)}
       />
 
       <br /><br />
 
       <button onClick={uploadReport}>
-        Upload Report
+        Save Report
       </button>
 
     </div>
+
   );
 }
 
