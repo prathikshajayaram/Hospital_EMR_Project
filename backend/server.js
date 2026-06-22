@@ -5,10 +5,10 @@ require("dotenv").config();
 const db = require("./db");
 
 // ROUTES
-const visitRoutes = require("./routes/visitRoutes");
-const diagnosisRoutes = require("./routes/diagnosisRoutes");
-const prescriptionRoutes = require("./routes/prescriptionRoutes");
-const labReportRoutes = require("./routes/labReportRoutes");
+const visitRoutes = require("./routes/visitRoutes.js");
+const diagnosisRoutes = require("./routes/diagnosisRoutes.js");
+const prescriptionRoutes = require("./routes/prescriptionRoutes.js");
+const labReportRoutes = require("./routes/labReportRoutes.js");
 
 const app = express();
 
@@ -50,11 +50,11 @@ app.use("/api/visits", visitRoutes);
 app.use("/api/diagnoses", diagnosisRoutes);
 app.use("/api/prescriptions", prescriptionRoutes);
 app.use("/api/labreports", labReportRoutes);
-
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 /* =========================
    HEALTH CHECK ROUTE
 ========================= */
-
 app.get("/", (req, res) => {
     res.status(200).json({
         message: "Hospital EMR Backend is Running Successfully"
@@ -77,7 +77,9 @@ app.use((err, req, res, next) => {
 ========================= */
 
 const PORT = process.env.PORT || 5000;
-
+app.get("/debug-server", (req, res) => {
+    res.send("SERVER DEBUG WORKING");
+});
 app.listen(PORT, () => {
     console.log(` Server Running on Port ${PORT}`);
 });

@@ -1,21 +1,25 @@
 const express = require("express");
-
 const router = express.Router();
 
 const labReportController =
 require("../controllers/labReportController");
 
-// UPLOAD REPORT
+// CREATE
 router.post(
     "/",
-    labReportController.uploadMiddleware,
-    labReportController.uploadLabReport
+    labReportController.createLabReport
 );
 
-// GET ALL REPORTS
+// GET ALL
 router.get(
     "/",
-    labReportController.getAllReports
+    labReportController.getAllLabReports
+);
+
+// DELETE
+router.delete(
+    "/:id",
+    labReportController.deleteLabReport
 );
 
 module.exports = router;

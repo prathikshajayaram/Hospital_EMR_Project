@@ -1,76 +1,91 @@
 const db = require("../db");
-const multer = require("multer");
-const path = require("path");
 
-// STORAGE CONFIGURATION
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, "uploads/");
-    },
-    filename: (req, file, cb) => {
-        cb(null, Date.now() + path.extname(file.originalname));
-    }
-});
-
-const upload = multer({ storage: storage });
-
-// MIDDLEWARE FOR UPLOAD
-exports.uploadMiddleware = upload.single("report_file");
-
-// UPLOAD LAB REPORT
-exports.uploadLabReport = (req, res) => {
+// CREATE REPORT
+exports.createLabReport = (req, res) => {
 
     const {
         visit_id,
-        report_name
+        report_name,
+        file_path
     } = req.body;
 
-    const file_path = req.file ? req.file.filename : null;
-
-    if (!file_path) {
-        return res.status(400).json({
-            message: "File upload failed"
-        });
-    }
-
     const sql = `
-    INSERT INTO lab_reports
-    (visit_id, report_name, file_path)
-    VALUES (?, ?, ?)
+        INSERT INTO lab_reports
+        (
+            visit_id,
+            report_name,
+            file_path
+        )
+        VALUES (?, ?, ?)
     `;
 
     db.query(
         sql,
-        [visit_id, report_name, file_path],
+        [
+            visit_id,
+            report_name,
+            file_path
+        ],
         (err, result) => {
 
             if (err) {
                 console.log(err);
+
                 return res.status(500).json({
-                    message: "Error uploading report"
+                    message: "Error Adding Report"
                 });
             }
 
             res.status(201).json({
-                message: "Lab Report Uploaded Successfully",
-                reportId: result.insertId,
-                file: file_path
+                message: "Lab Report Added Successfully"
             });
+
         }
     );
 };
 
 // GET ALL REPORTS
-exports.getAllReports = (req, res) => {
+exports.getAllLabReports = (req, res) => {
 
-    const sql = "SELECT * FROM lab_reports";
+    db.query(
+        "SELECT * FROM lab_reports",
+        (err, results) => {
 
-    db.query(sql, (err, results) => {
+            if (err) {
+                return res.status(500).json(err);
+            }
 
-        if (err) {
-            return res.status(500).json(err);
+            res.json(results);
+
         }
+    );
 
-        res.status(200).json(results);
-    });
+};
+
+// DELETE REPORT
+exports.deleteLabReport = (req, res) => {
+
+    const id = req.params.id;
+
+    const sql = `
+        DELETE FROM lab_reports
+        WHERE report_id = ?
+    `;
+
+    db.query(
+        sql,
+        [id],
+        (err, result) => {
+
+            if (err) {
+                return res.status(500).json(err);
+            }
+
+            res.json({
+                message: "Lab Report Deleted Successfully"
+            });
+
+        }
+    );
+
 };
